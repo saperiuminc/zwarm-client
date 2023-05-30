@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const zwarm = require('./lib/zwarm');
+const zwarmExperimental = require('./lib/zwarm-experimental');
 
 const argv = require('yargs')   // eslint-disable-line
     .usage('Usage: $0 <command> [options]')
@@ -35,8 +36,25 @@ const argv = require('yargs')   // eslint-disable-line
                 type: 'array',
                 description: 'upload and/or map files to swarm server <src>[:<dest>]'
             })
+            .option('secured', {
+                type: 'boolean',
+                description: 'Use https to connect to <address>',
+                default: false
+            })
+            .option('secret', {
+                type: 'string',
+                description: 'simple secret key for authenticating zombie swarm(s)'
+            })
+            .option('show-cost', {
+                type: 'boolean',
+                description: 'Show resource (or dollar) cost for running script',
+                default: false
+            })    
     }, (argv) => {
-        zwarm.run(argv);
+        if (argv.experimental)
+            zwarmExperimental.run(argv);
+        else
+            zwarm.run(argv);
     })
     .command('info <address>', 'returns server info', (yargs) => {
         yargs
@@ -44,12 +62,20 @@ const argv = require('yargs')   // eslint-disable-line
                 describe: 'zombie swarm URL/address'
             })
     }, (argv) => {
-        zwarm.info(argv);
+        if (argv.experimental)
+            zwarmExperimental.info(argv);
+        else
+            zwarm.info(argv);
     })
     .option('verbose', {
         alias: 'v',
         type: 'boolean',
         description: 'Run with verbose logging'
+    })
+    .option('experimental', {
+        type: 'boolean',
+        description: 'Use procedural-based Test Runner/Coordinator',
+        default: false
     })
     .demandCommand()
     .epilog('Zombie Swarm e2e/loadtest Client- copyright 2023')

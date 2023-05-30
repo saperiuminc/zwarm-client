@@ -3,21 +3,21 @@ describe('socket.io chat demo', function() {
 
     before(async() => {
         $socketio.on('connect', (sid) => {
-            console.log('connect:', sid);
+            $log('connect:', sid);
         });
         $socketio.on('disconnect', (sid) => {
-            console.log('disconnect:', sid);
+            $log('disconnect:', sid);
         });
         $socketio.on('login', (data, sid) => {
-            console.log('login:', data, sid);
+            $log('login:', data, sid);
         });
         $socketio.on('new message', (data, sid) => {
-            console.log('new message:', data, sid);
+            $log('new message:', data, sid);
         });
         /*
         // NOTE: * listen to all events
         $socketio.on('*', (event, data, sid) => {
-            console.log('EVENT:', event, data, sid);
+            $log('EVENT:', event, data, sid);
         });
         */
         _sioSub = $socketio.subscribe();
